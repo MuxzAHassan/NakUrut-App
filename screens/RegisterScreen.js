@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Pressable, KeyboardAvoidingView, StyleSheet, Image, Platform, ScrollView } from 'react-native';
 import  DateTimePicker from '@react-native-community/datetimepicker';
+import { ToggleButton } from 'react-native-paper';
 
 export default function RegisterScreen({ navigation }) {
 
@@ -8,8 +9,10 @@ export default function RegisterScreen({ navigation }) {
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [gender, setGender] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState('');
 
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || dateOfBirth;
@@ -56,6 +59,23 @@ export default function RegisterScreen({ navigation }) {
       color: '#2E86C1',
       alignSelf: 'flex-start',
     },
+    label: {
+        fontSize: 16,
+        fontWeight: 'normal',
+        marginBottom: 8,
+    },
+    toggle: {
+        borderWidth: 1,
+        borderRadius: 8,
+        borderColor: '#ccc',
+        marginBottom: 15,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+    },
+    activeToggle: {
+        backgroundColor: '#d3d3d3',
+        borderColor: '#d3d3d3',
+    },
   });
 
   const gotoLogin = () => {
@@ -64,7 +84,10 @@ export default function RegisterScreen({ navigation }) {
   };
 
   return (
+    <KeyboardAvoidingView behavior='padding' style={{ flex: 1 }}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1,}}>
     <View style={styles.container}>
+        <Image source={require('../assets/NakUrut Logo only.png')} style={{width: 150, height: 150, marginBottom: 15}} resizeMode='contain'/>
         <TextInput
         style={styles.input}
         placeholder="First Name"
@@ -77,8 +100,36 @@ export default function RegisterScreen({ navigation }) {
         value={lastName}
         onChangeText={setLastName}
       />
+
+      {/*Pressable function for gender selection*/}
+      <View style={{ width: '100%', alignItems: 'flex-start', marginBottom: 10 }}>
+        <Text style={styles.label}>Gender</Text>
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+                <Pressable
+                    onPress={() => setGender('male')}
+                    style={[
+                        styles.toggle,
+                        gender === 'male' && styles.activeToggle
+                    ]}
+                >
+                    <Text style={styles.text}>Male</Text>
+                </Pressable>
+
+                <Pressable
+                    onPress={() => setGender('female')}
+                    style={[
+                        styles.toggle,
+                        gender === 'female' && styles.activeToggle
+                    ]}
+                >
+                    <Text style={styles.text}>Female</Text>
+                </Pressable>
+            </View>
+        </View>
+        
+        {/*Date picker function for Date of Birth selection*/}    
       <TouchableOpacity style={styles.input} onPress={() => setShowDatePicker(true)}>
-        <Text placeholder="Date of Birth">{dateOfBirth.toDateString()}</Text>
+        <Text placeholder="Date of Birth">{dateOfBirth ? dateOfBirth.toDateString() : 'Please select your Date of Birth'}</Text>
       </TouchableOpacity>
         {showDatePicker && (
         <DateTimePicker
@@ -88,6 +139,14 @@ export default function RegisterScreen({ navigation }) {
           onChange={onChangeDate}
         />
         )}
+
+      <TextInput
+        style={styles.input}
+        placeholder="Phone Number"
+        value={phoneNumber}
+        onChangeText={setPhoneNumber}
+        keyboardType="phone-pad"
+      />
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -103,7 +162,8 @@ export default function RegisterScreen({ navigation }) {
       <TouchableOpacity style={styles.button} onPress={gotoLogin}>
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
-
     </View>
+    </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
