@@ -39,3 +39,7 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+#PRD markdown files
+NakUrut PRD v1.0.md
+README.md
